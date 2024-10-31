@@ -8,6 +8,10 @@ namespace ConsoleApp56Classes
 {
     public class DB
     {
+        public Developer NullDeveloper { get; set; } = new Developer { Title = "Не указан" };
+        public Publisher NullPublisher { get; set; } = new Publisher { Title = "Не указан" };
+
+
         public List<Genre> Genres = new List<Genre>();
         public List<Platform> Platforms = new List<Platform>();
         public List<Publisher> Publishers = new List<Publisher>();
@@ -65,8 +69,12 @@ namespace ConsoleApp56Classes
                     };
                     string d = br.ReadString();
                     game.Developer = Developers.FirstOrDefault(s => s.Title == d);
+                    if (game.Developer == null)
+                        game.Developer = NullDeveloper;
                     string p = br.ReadString();
                     game.Publisher = Publishers.FirstOrDefault(s => s.Title == p);
+                    if (game.Publisher == null)
+                        game.Publisher = NullPublisher;
                     int count2 = br.ReadInt32();
                     game.Genres = new();
                     for (int j = 0; j < count2; j++)

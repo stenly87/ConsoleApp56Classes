@@ -1,6 +1,6 @@
 ﻿namespace ConsoleApp56Classes
 {
-    public enum Rating
+    public enum Rating 
     { 
         Отстой,
         На_один_раз,
