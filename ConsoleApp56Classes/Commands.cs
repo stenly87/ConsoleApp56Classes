@@ -8,7 +8,6 @@ namespace ConsoleApp56Classes
 {
     public enum Commands
     {
-        test,
         add_genre,
         list_genre,
         edit_genre,
@@ -20,11 +19,16 @@ namespace ConsoleApp56Classes
         add_developer,
         list_developer,
         edit_developer,
-       
-        
-        help,
-        exit,
         list_publisher,
         remove_developer,
+        add_publisher,
+        edit_publisher,
+        remove_publisher,
+        add_game,
+        list_game,
+        edit_game,
+        remove_game,
+        help,
+        exit,        
     }
 }
