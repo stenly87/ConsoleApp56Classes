@@ -8,7 +8,6 @@
         public CommandHelper(DB db)
         {
             this.db = db;
-
             AddGenreCommands();
             AddPlaformCommands();
             AddDeveloperCommands();

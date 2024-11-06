@@ -67,6 +67,12 @@ namespace ConsoleApp56Classes
             // платформа, дата выпуска
             // с точки зрения бд: есть объект игра (название, дата выпуска, рейтинг,
             // *разработчик, *издатель, **жанры, **платформы)
+
+            RunLesson5();
+            Console.ReadLine();
+            FreeLesson();
+            Console.ReadLine();
+            return;
             DB dB = new DB();   
             CommandHelper commandHelper = new CommandHelper(dB);
             string message;
@@ -82,6 +88,71 @@ namespace ConsoleApp56Classes
             }
             dB.Save();
         }
+        static Lesson5 anotherObj;
+        public static void RunLesson5()
+        {
+            // содержимое классов которое уже задели:
+            // поля (переменные в классе)
+            // свойства (управление полями)
+            // методы 
+            // конструкторы
+
+            // существует еще один вариант конструктора
+            // статичный конструктор (см Lesson5)
+
+            // сначал выполнится статичный конструктор
+            // следом выполнится метод
+            //Lesson5.Hello();
+
+            // деструктор
+            // может быть объявлен в классе (см Lesson5
+            // выполняется в момент, когда экземпляр
+            // класса уничтожается сборщиком мусора
+            // т.к. нельзя точно предсказать, когда это
+            // произойдет, пользоваться нужно только
+            // в случаях, когда больше нечем пользоваться
+            // в приложениях на шарпе есть сборщик мусора
+            // Garbage Collector (GC), он автоматически
+            // сканирует память занимаемую приложением
+            // и отслеживает объекты-сироты, если таковые 
+            // находятся - объекты-сироты уничтожаются
+
+            //List<Lesson5> list = new List<Lesson5>();
+            /*for (int i = 0; i < 100000000; i++)
+                new Lesson5();
+
+            Console.ReadLine();*/
+
+            // события 
+            // события в c# представлены в виде
+            // элемента event
+            // является реализацией паттерна - издатель-подписчик
+            // событие можно вызвать только изнутри класса
+            // это главное отличие события от делегата
+
+            Lesson5 lesson5 = new Lesson5();
+            lesson5.OnHello += (o, e) => {
+                Console.WriteLine("объект " + o + " вызвал метод Hello");
+            };
+            anotherObj = new Lesson5(lesson5);
+           
+
+            /*(s, arg) => {
+                Console.WriteLine("объект " + s + " вызвал метод Hello и шлет вам "+ arg);
+            };*/
+            lesson5.Hello();
+
+
+
+        }
+
+        public static void FreeLesson()
+        {
+            anotherObj.FreeField();
+            GC.Collect() ;
+        }
+
+
 
         public static void Test()
         {
@@ -211,4 +282,75 @@ namespace ConsoleApp56Classes
         public int Number { get; set; }
         public DateAndTime Date { get; set; }
     }
+}
+
+public class Lesson5
+{
+    public Lesson5()
+    {
+        
+    }
+    // здесь мы через конструктор получаем 
+    // ссылку на другой объект лессон
+    // сохраняем ссылку в поле - тогда
+    // объект lesson перестает быть сиротой
+    private Lesson5 lesson;
+    public Lesson5(Lesson5 lesson)
+    {
+        lesson.OnHello2 += Test;
+        this.lesson = lesson;
+    }
+
+    public void Test(object? sender, string test)
+    {
+        Console.WriteLine("Другой объект Lesson5 узнал о том, что первый объект Lesson5 вызвал метод Hello при помощи события Hello2 ");
+    }
+
+    string text = "мне очень жаль, я никому не нужен" +
+        "";
+    // статичный конструктор
+    // объявляется через слово static
+    // не имеет аргументов
+    // может быть только один
+    // вызывается при первом обращении к классу
+    // выполняется только один раз
+    // позволяет назначить или настроить какие-то
+    // первичные данные для класса
+    // т.к. конструктор статичный, из него можно
+    // вызвать только статичные элементы класса
+    static Lesson5()
+    {
+        Console.WriteLine("hello from static lego");
+    }
+
+    public void Hello()
+    {
+        Console.WriteLine("hello from static method");
+        // вызов события вызывает все подписанные методы на 
+        // это событие
+        OnHello?.Invoke(this, EventArgs.Empty);
+        OnHello2?.Invoke(this, "что-нибудь");
+        /*if (OnHello != null) то же самое, что с оператором ?.
+            OnHello(this, EventArgs.Empty);*/
+        }
+
+    internal void FreeField()
+    {
+        // обнуление ссылки на объект
+        // может сделать объект сиротой
+        lesson = null;
+    }
+
+    // деструктор объявляется с помощью знака ~
+    // аргументов нет
+    static int index = 0;
+  
+
+    ~Lesson5()
+    {
+        Console.WriteLine("Выполнен деструктор класса. Еще один сирота уничтожен. Всего: " + ++index ); 
+    }
+
+    public event EventHandler OnHello;
+    public event EventHandler<string> OnHello2;
 }

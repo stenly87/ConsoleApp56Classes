@@ -2,8 +2,15 @@
 {
     public class Developer 
     {
-        public string Title  { get; set; }
+        string _title;
+
+        public string Title { 
+            get => _title; 
+            set => _title = value; 
+        }
         public string Coutry { get; set; }
         public int TeamCount { get; set; }
+
+      
     }
 }
