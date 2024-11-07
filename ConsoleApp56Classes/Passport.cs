@@ -6,6 +6,6 @@ namespace ConsoleApp56Classes
     {
         public int Serial { get; set; }
         public int Number { get; set; }
-        public DateAndTime Date { get; set; }
+        public DateTime Date { get; set; }
     }
 }

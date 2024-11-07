@@ -1,4 +1,5 @@
 ﻿using ConsoleApp56Classes;
+using System.Text.Json;
 using Test;
 
 namespace ConsoleApp56Classes
@@ -69,9 +70,26 @@ namespace ConsoleApp56Classes
             // с точки зрения бд: есть объект игра (название, дата выпуска, рейтинг,
             // *разработчик, *издатель, **жанры, **платформы)
 
-            RunLesson6();
+            Employer employer = new Employer("Алексей",
+                "Анатольевич", "Пушкин", "телефон", DateTime.Now);
+            employer.Passport = new Passport { Date = DateTime.Now, Number = 123, Serial = 547 };
 
-            return;
+            string text = JsonSerializer.Serialize(employer);
+            Console.WriteLine(text);
+
+            using (var fs = File.Create("test.json"))
+                // иерархия объектов сохраняется в файл
+                JsonSerializer.Serialize(fs, employer);
+            Employer second;
+            using (var fs = File.OpenRead("test.json"))
+                // иерархия объектов воссоздается из файла
+                second = JsonSerializer.Deserialize<Employer>(fs);
+
+            Console.WriteLine(second.FirstName);
+
+                //RunLesson6();
+
+                return;
 
 
             RunLesson5();
@@ -276,6 +294,8 @@ namespace ConsoleApp56Classes
         // если класс помечен как статичный, то он может содержать только статичные элементы
         // экземпляр статичного класса создать нельзя
         //  Math math = new Math(); не выйдет
+
+        
     }
 }
 
