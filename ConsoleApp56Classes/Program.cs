@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using ConsoleApp56Classes;
+using Test;
 
 namespace ConsoleApp56Classes
 {
@@ -68,11 +69,18 @@ namespace ConsoleApp56Classes
             // с точки зрения бд: есть объект игра (название, дата выпуска, рейтинг,
             // *разработчик, *издатель, **жанры, **платформы)
 
+            RunLesson6();
+
+            return;
+
+
             RunLesson5();
             Console.ReadLine();
             FreeLesson();
             Console.ReadLine();
             return;
+
+
             DB dB = new DB();   
             CommandHelper commandHelper = new CommandHelper(dB);
             string message;
@@ -142,8 +150,6 @@ namespace ConsoleApp56Classes
             };*/
             lesson5.Hello();
 
-
-
         }
 
         public static void FreeLesson()
@@ -151,8 +157,6 @@ namespace ConsoleApp56Classes
             anotherObj.FreeField();
             GC.Collect() ;
         }
-
-
 
         public static void Test()
         {
@@ -189,168 +193,126 @@ namespace ConsoleApp56Classes
 
             employers[0].FirstName = "";
         }
-    }
 
+        public static void RunLesson6()
+        { 
+            // индексаторы
+            Lesson6 lesson6 = new Lesson6();
+            lesson6[0] = "замена строки";
+            for(int i = 0 ; i < 10; i++)
+                Console.WriteLine(lesson6[i]);
 
-    public class Employer
-    {
-        // поле
-        int age;
+            lesson6.strings = new string[] { };
 
-        // свойства        
-        public string FirstName { 
-            get => firstName; 
-            set => firstName = value; }
-        public string LastName { get; set; }
-        public string PatronimycName { get; set; }
-        public string Phone { get; set; }
-        public DateTime Birthday { get; set; }
-        public bool Gender { get; set; }
-        public Passport Passport { get; set; }
-
-        // полная запись свойства подразумевает создание поля
-        // и подробное описание модификаторов с работой этого поля
-        string snils; // поле
-        private string firstName;
-
-        public string Snils
-        {
-            get 
-            {
-                //Log.Attention("Кто-то узнал ваш снилс!");
-                return snils;
-            }
-            //get => snils; // тоже самое, только в виде лямбды, выглядит проще
-            set 
-            {// назначение значения происходит с помощью слова value
-                if (string.IsNullOrEmpty(value))
-                    value = "Значение не назначено";
-                if (value == "1")
-                    return;
-                snils = value;
-            }
-        }
-
-        public Employer(string fName, string pName, string lName, string phone, DateTime birthday)
-            : this(fName, pName, lName, phone)
-        {
-            Birthday = birthday;
-            // неправильный пример вычисления возраста
-            // не делайте так. это плохо
-            age = DateTime.Now.Year - birthday.Year;
-        }
-        // конструктор это метод без возвращаемого типа, имя совпадает 
-        // с классом
-        // класс обычно отвечает за задание начальных значений в поля
-        // и свойства внутри класса
-        // может выполнять еще какую-то функцию, которая обязательно нужна
-        // для работы объекта
-        public Employer(string fName, string pName, string lName, string phone)
-            : this(fName, pName, lName)
-        {
-            Phone = phone;
-        }
-        public Employer(string fName, string pName, string lName)
-           : this(fName, pName)
-        {
-            LastName = lName;            
-        }       
-        public Employer(string fName, string pName)
-            : this(fName)
-        {
-            PatronimycName = pName;
-        }
-        public Employer(string fName)
-            : this()
-        {
-            FirstName = fName;
-        }
-        public Employer() 
-        {
-            Passport = new();
-        }
-
-        public void PrintAge()
-        {
-            Console.WriteLine($"Сотрудник {FirstName} прожил уже {age} лет. Поздравим его с этим достижением!");
+            // проверка internal
+            ClassLibrary1.Class1 class1 = new ClassLibrary1.Class1();
+            //class1.Test = "недоступен";
+            class1.Test2 = "str";
+            Lesson5 lesson5 = new Lesson5();
+            TestClass testClass = TestClass.CreateInstance();
+            testClass.Test1(lesson5);
         }
     }
 
-    public class Passport
+    public class Lesson6
     {
-        public int Serial { get; set; }
-        public int Number { get; set; }
-        public DateAndTime Date { get; set; }
+        internal string[] strings;
+        public Lesson6()
+        {
+            strings = ["первая строка",
+                "вторая строка"];
+        }
+        // синтаксис индексатора включает
+        // тип возвращаемого значения
+        // ключевое слово this после которого
+        // в квадратных скобках идут аргументы
+        public string this[int index]
+        {
+            // чтение значения по индексу
+            get
+            {// проверки на отрицательный индекс
+                if (strings.Length <= index)
+                    return "нет значения";
+                return strings[index];
+            }
+            // запись значения по индексу
+            set
+            {// проверки на отрицательный индекс
+             // проверки на существование индекса
+                strings[index] = value;
+            }
+        }
+        // другой индексатор
+        // доступ только для чтения
+        // должно быть отличие в кол-ве или типе аргументов
+        public int this[string i]
+        { // без смысла
+            get { return i.Length; }
+        }
+
+
+        // модификаторы доступа
+        // контролируют область, откуда есть доступ
+        // к элементу, к которому применяется модификатор
+        // public - доступ есть отовсюду, внутри класса, извне класса, из другого пространства имен и даже из другой сборки
+        // private - самый закрытый модификатор, доступ есть только внутри класса
+        // protected - доступ внутри класса и внутри классов-наследников
+        // internal - доступ внутри класса, внутри наследников, снаружи класса, но в рамках одной сборки
+        // private protected 
+        // protected internal  - доступ внутри класса и его наследников, но в рамках сборки
+        // в с# 11 появился еще модификатор file - доступ в рамках одного файла   
+        // если объект класса передается в некоторый 
+        // метод (конструктор, индексатор, событие и тп)
+        // то модификатор видимости объекта должен быть
+        // не ниже, чем модификатор видимости метода
+
+        // static - ключевое слово, которое помечает
+        // класс или элемента как статичный, это означает
+        // что для использования элемента не нужно создавать
+        // экземпляр класса
+        // static элементы инициализируются в единственном экземпляре
+        // static элементы не имеют доступа к нестатичным
+        // элементам класса, в другую сторону доступ есть
+        // если класс помечен как статичный, то он может содержать только статичные элементы
+        // экземпляр статичного класса создать нельзя
+        //  Math math = new Math(); не выйдет
     }
 }
 
-public class Lesson5
+namespace Test
 {
-    public Lesson5()
+    public class TestClass
     {
-        
-    }
-    // здесь мы через конструктор получаем 
-    // ссылку на другой объект лессон
-    // сохраняем ссылку в поле - тогда
-    // объект lesson перестает быть сиротой
-    private Lesson5 lesson;
-    public Lesson5(Lesson5 lesson)
-    {
-        lesson.OnHello2 += Test;
-        this.lesson = lesson;
-    }
-
-    public void Test(object? sender, string test)
-    {
-        Console.WriteLine("Другой объект Lesson5 узнал о том, что первый объект Lesson5 вызвал метод Hello при помощи события Hello2 ");
-    }
-
-    string text = "мне очень жаль, я никому не нужен" +
-        "";
-    // статичный конструктор
-    // объявляется через слово static
-    // не имеет аргументов
-    // может быть только один
-    // вызывается при первом обращении к классу
-    // выполняется только один раз
-    // позволяет назначить или настроить какие-то
-    // первичные данные для класса
-    // т.к. конструктор статичный, из него можно
-    // вызвать только статичные элементы класса
-    static Lesson5()
-    {
-        Console.WriteLine("hello from static lego");
-    }
-
-    public void Hello()
-    {
-        Console.WriteLine("hello from static method");
-        // вызов события вызывает все подписанные методы на 
-        // это событие
-        OnHello?.Invoke(this, EventArgs.Empty);
-        OnHello2?.Invoke(this, "что-нибудь");
-        /*if (OnHello != null) то же самое, что с оператором ?.
-            OnHello(this, EventArgs.Empty);*/
+        private TestClass()
+        {
+            // закрытый конструктор можно вызывать
+            // только внутри класса
+            // полезно, если мы не хотим, чтобы 
+            // все подряд создавали экземпляры нашего класса
+            // или мы хотим контролировать кол-во экземпляров 
+            // класса
+        }
+        static TestClass instance;
+        // статичный метод
+        // мы можем вызвать его через имя класса TestClass
+        public static TestClass CreateInstance()
+        {
+            // пример простого синглтона (паттерн - единственный экземпляр)
+           if (instance == null)
+                instance = new TestClass();
+           return instance; 
+            // такой вызов невозможен, поскольку в данном случае
+            // Test1 не относится к конкретному экземпляру
+            //Test1(new Lesson5());
+            return new TestClass();
         }
 
-    internal void FreeField()
-    {
-        // обнуление ссылки на объект
-        // может сделать объект сиротой
-        lesson = null;
+        internal void Test1(Lesson5 lesson5)
+        {
+            var test = CreateInstance();
+            Lesson6 lesson6 = new Lesson6();
+            lesson6.strings = null;
+        }
     }
 
-    // деструктор объявляется с помощью знака ~
-    // аргументов нет
-    static int index = 0;
-  
-
-    ~Lesson5()
-    {
-        Console.WriteLine("Выполнен деструктор класса. Еще один сирота уничтожен. Всего: " + ++index ); 
-    }
-
-    public event EventHandler OnHello;
-    public event EventHandler<string> OnHello2;
 }
